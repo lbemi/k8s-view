@@ -1,6 +1,8 @@
-use anyhow::Ok;
+use crate::error::MyError;
+use anyhow::Result;
 use serde::{Deserialize, Serialize};
 use std::{fs::File, io::BufReader};
+
 #[derive(Serialize, Deserialize, Debug)]
 pub struct KubernetesConfig {
     #[serde(rename = "apiVersion")]
@@ -35,7 +37,7 @@ pub struct ContextInfo {
     pub namespace: Option<String>,
 }
 
-pub fn load_k8s_config(file_name: &str) -> anyhow::Result<KubernetesConfig> {
+pub fn load_k8s_config(file_name: &str) -> Result<KubernetesConfig, MyError> {
     let home = dirs::home_dir();
     match home {
         Some(path) => {
@@ -49,9 +51,8 @@ pub fn load_k8s_config(file_name: &str) -> anyhow::Result<KubernetesConfig> {
                     Some(kubernetes_config.current_context.clone());
             }
 
-            println!("{:?}", kubernetes_config);
             Ok(kubernetes_config)
         }
-        None => return Err(anyhow::anyhow!("home dir not found")),
+        None => return Err(MyError::IOError("Home directory not found".to_string())),
     }
 }
