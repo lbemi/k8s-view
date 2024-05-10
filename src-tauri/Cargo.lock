@@ -1693,6 +1693,7 @@ dependencies = [
  "dirs",
  "k8s-openapi",
  "kube",
+ "once_cell",
  "serde",
  "serde_json",
  "serde_yaml",

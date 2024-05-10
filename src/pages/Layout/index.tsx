@@ -1,22 +1,54 @@
-import React from 'react';
-import { UploadOutlined, UserOutlined, VideoCameraOutlined } from '@ant-design/icons';
-import { Layout, Menu, theme } from 'antd';
+import React from "react";
 
-const { Header, Content, Footer, Sider } = Layout;
+import { Layout, Menu, MenuProps, theme } from "antd";
+import { Outlet, useNavigate, useSearchParams } from "react-router-dom";
+import { HomeOutlined, DiffOutlined, EditOutlined } from "@ant-design/icons";
 
-const items = [UserOutlined, VideoCameraOutlined, UploadOutlined, UserOutlined].map(
-  (icon, index) => ({
-    key: String(index + 1),
-    icon: React.createElement(icon),
-    label: `nav ${index + 1}`,
-  }),
-);
+const { Header, Content, Sider } = Layout;
 
- const GeekLayout: React.FC = () => {
+type MenuItem = Required<MenuProps>["items"][number];
+const items: MenuItem[] = [
+  {
+    label: "首页",
+    key: "/kubernetes",
+    icon: <HomeOutlined />,
+  },
+  {
+    label: "工作负载",
+    key: "/workload",
+    icon: <DiffOutlined />,
+    children: [
+      {
+        label: "Deployment",
+        key: "/kubernetes/workload/deployment",
+        icon: <DiffOutlined />,
+      },
+      {
+        label: "Pod",
+        key: "/kubernetes/workload/pod",
+        icon: <DiffOutlined />,
+      },
+    ],
+  },
+  {
+    label: "网络",
+    key: "/kuberntes/network",
+    icon: <EditOutlined />,
+  },
+];
+const GeekLayout: React.FC = () => {
+  const [searchParams] = useSearchParams();
+  const clusterName = searchParams.get("cluster");
+  console.log("---", clusterName);
   const {
     token: { colorBgContainer, borderRadiusLG },
   } = theme.useToken();
-
+  const navigate = useNavigate();
+  const onMenuClick: MenuProps["onClick"] = (route) => {
+    const path = route.key;
+    console.log(path);
+    navigate(path);
+  };
   return (
     <Layout>
       <Sider
@@ -30,11 +62,18 @@ const items = [UserOutlined, VideoCameraOutlined, UploadOutlined, UserOutlined].
         }}
       >
         <div className="demo-logo-vertical" />
-        <Menu theme="dark" mode="inline" defaultSelectedKeys={['4']} items={items} />
+        <Menu
+          theme="dark"
+          mode="inline"
+          // defaultSelectedKeys={["4"]}s
+          style={{ height: "100%", borderRight: 0 }}
+          items={items}
+          onClick={onMenuClick}
+        />
       </Sider>
       <Layout>
         <Header style={{ padding: 0, background: colorBgContainer }} />
-        <Content style={{ margin: '24px 16px 0' }}>
+        <Content style={{ margin: "24px 16px 0" }}>
           <div
             style={{
               padding: 24,
@@ -44,12 +83,10 @@ const items = [UserOutlined, VideoCameraOutlined, UploadOutlined, UserOutlined].
               borderRadius: borderRadiusLG,
             }}
           >
-            content
+            xxxx
+            <Outlet />
           </div>
         </Content>
-        {/* <Footer style={{ textAlign: 'center' }}>
-          Ant Design ©{new Date().getFullYear()} Created by Ant UED
-        </Footer> */}
       </Layout>
     </Layout>
   );
