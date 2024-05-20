@@ -2,12 +2,16 @@ import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 import { internalIpV4 } from "internal-ip";
 import path from 'path'
+import { ViteRsw } from 'vite-plugin-rsw';
 // @ts-expect-error process is a nodejs global
 const mobile = !!/android|ios/.exec(process.env.TAURI_ENV_PLATFORM);
 
 // https://vitejs.dev/config/
 export default defineConfig(async () => ({
-  plugins: [react()],
+  plugins: [
+    react(),
+    ViteRsw()
+  ],
   resolve: {
     alias: {
       '@': path.resolve(path.dirname(new URL(import.meta.url).pathname), './src')
