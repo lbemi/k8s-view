@@ -8,7 +8,9 @@
     "beforeBuildCommand": "npm run build",
     "frontendDist": "../dist"
   },
-  "app": {"windows": [
+  "app": {
+    "macOSPrivateApi": true,
+    "windows": [
       {
         "title": "k8s-view",
         "width": 800,
