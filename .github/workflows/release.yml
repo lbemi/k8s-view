@@ -24,7 +24,7 @@ jobs:
         shell: bash
         run: |
           echo "using version tag ${GITHUB_REF:10}"
-          echo ::set-output name=version::"${GITHUB_REF:10}"
+          echo "${GITHUB_REF:10}" >> "$version"
 
       # 根据查询到的版本号创建 release
       - name: Create Release
@@ -83,7 +83,7 @@ jobs:
       # 获取 npm 缓存路径
       - name: Get npm cache directory path
         id: npm-cache-dir-path
-        run: echo "::set-output name=dir::$(npm config get cache)"
+        run: echo "$(npm config get cache)" >> "$dir"
 
       # 使用 Npm 缓存
       - name: Npm cache
