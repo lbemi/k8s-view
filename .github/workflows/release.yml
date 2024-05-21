@@ -78,7 +78,7 @@ jobs:
 
       # 可选，如果需要使用 rsw 构建 wasm，则安装 rsw
       - name: Install rsw
-        run: cargo install rsw
+        run: cargo install rsw wasm-pack
 
       # 获取 npm 缓存路径
       - name: Get npm cache directory path
