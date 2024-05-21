@@ -1,105 +1,56 @@
-import { Button, Col, MenuTheme, Row, Space, Switch, Table, TableProps, Tag } from "antd";
-import { FC, useState } from "react";
+import {  Button, Table, TableProps } from "antd";
+import { FC, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-interface DataType {
-    key: string;
-    name: string;
-    age: number;
-    address: string;
-    tags: string[];
-}
+import { invoke } from "@tauri-apps/api/core";
+import { Cluster } from "@/types/cluster";
+import init, {greet} from '@mywasm/foo'
 
-const columns: TableProps<DataType>['columns'] = [
-    {
-        title: 'Name',
-        dataIndex: 'name',
-        key: 'name',
-        render: (text) => <a>{text}</a>,
-    },
-    {
-        title: 'Age',
-        dataIndex: 'age',
-        key: 'age',
-    },
-    {
-        title: 'Address',
-        dataIndex: 'address',
-        key: 'address',
-    },
-    {
-        title: 'Tags',
-        key: 'tags',
-        dataIndex: 'tags',
-        render: (_, { tags }) => (
-            <>
-                {tags.map((tag) => {
-                    let color = tag.length > 5 ? 'geekblue' : 'green';
-                    if (tag === 'loser') {
-                        color = 'volcano';
-                    }
-                    return (
-                        <Tag color={color} key={tag}>
-                            {tag.toUpperCase()}
-                        </Tag>
-                    );
-                })}
-            </>
-        ),
-    },
-    {
-        title: 'Action',
-        key: 'action',
-        render: (_, record) => (
-            <Space size="middle">
-                <a>Invite {record.name}</a>
-                <a>Delete</a>
-            </Space>
-        ),
-    },
-];
-
-const data: DataType[] = [
-    {
-        key: '1',
-        name: 'John Brown',
-        age: 32,
-        address: 'New York No. 1 Lake Park',
-        tags: ['nice', 'developer'],
-    },
-    {
-        key: '2',
-        name: 'Jim Green',
-        age: 42,
-        address: 'London No. 1 Lake Park',
-        tags: ['loser'],
-    },
-    {
-        key: '3',
-        name: 'Joe Black',
-        age: 32,
-        address: 'Sydney No. 1 Lake Park',
-        tags: ['cool', 'teacher'],
-    },
-];
 export const Home: FC = () => {
-    const [theme, setTheme] = useState<MenuTheme>('dark');
-    const changeTheme = (value: boolean) => {
-        setTheme(value ? 'dark' : 'light');
-    };
+
     const navigate = useNavigate();
-    const redircet = () => {
-        navigate('/kubernetes')
+    const redircet = (record:Cluster) => {
+        navigate(`/kubernetes?cluster=${record.name}`)
     }
+    const columns: TableProps<Cluster>['columns'] = [
+        {
+            title: '集群名称',
+            dataIndex: 'name',
+            key: 'name',
+            align: 'center',
+            render: (text,record) => <a onClick={()=>redircet(record)}>{text}</a>,
+        },
+        {
+            title: '集群地址',
+            dataIndex: ['cluster', 'server'],
+            key: 'server',
+            align: 'center',
+        },
+    
+    ];
+    
+    const [clusters, setClusters] = useState<Array<Cluster>>([])
+
+    const list_cluster = async () => {
+        await invoke("get_clusters").then((res) => {
+            setClusters(res as Array<Cluster>)
+        })
+    }
+    useEffect(() => {
+        list_cluster()
+        init()
+    }, [])
+
     return (
         <>
             <div className="container">
-                
+                <div>
+                    <Button type="primary" onClick={()=> greet()}>wasm</Button>
+                </div>
                 <h1>Kuberntes 列表</h1>
                 <div style={{ display: 'flex', justifyContent: 'center' }}>
-                    <Table columns={columns} dataSource={data} style={{ width: '80%' }} pagination={false} />
+                    <Table rowKey={record => record.name} columns={columns} dataSource={clusters} style={{ width: '80%' }} pagination={false} />
                 </div>
-
             </div>
         </>
     )

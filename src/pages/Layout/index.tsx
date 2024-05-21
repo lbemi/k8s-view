@@ -2,7 +2,7 @@ import React from 'react';
 import { UploadOutlined, UserOutlined, VideoCameraOutlined } from '@ant-design/icons';
 import { Layout, Menu, theme } from 'antd';
 
-const { Header, Content, Footer, Sider } = Layout;
+const { Header, Content,  Sider } = Layout;
 
 const items = [UserOutlined, VideoCameraOutlined, UploadOutlined, UserOutlined].map(
   (icon, index) => ({
