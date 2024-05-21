@@ -24,7 +24,7 @@ jobs:
         shell: bash
         run: |
           echo "using version tag ${GITHUB_REF:10}"
-          echo "${GITHUB_REF:10}" >> "$version"
+          echo "${GITHUB_REF:10}" >> "$VERSION"
 
       # 根据查询到的版本号创建 release
       - name: Create Release
