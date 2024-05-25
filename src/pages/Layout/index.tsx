@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { VideoCameraOutlined } from '@ant-design/icons';
-import { Layout, Menu, MenuProps, theme } from 'antd';
+import { Card, Layout, Menu, MenuProps, theme } from 'antd';
 import { Outlet, useLocation, useNavigate, } from 'react-router-dom';
+import { Footer } from 'antd/es/layout/layout';
 
 const { Header, Content, Sider } = Layout;
 type MenuItem = Required<MenuProps>['items'][number];
@@ -89,7 +90,10 @@ const GeekLayout: React.FC = () => {
       <Layout>
         <Header style={{ padding: 0, background: colorBgContainer }} />
         <Content style={{ margin: '24px 16px 0' }}>
-          <div
+          <Card  title="Small size card" extra={<a href="#">More</a>} >
+            <Outlet />
+          </Card>
+          {/* <div
             style={{
               padding: 24,
               minHeight: 560,
@@ -100,11 +104,9 @@ const GeekLayout: React.FC = () => {
           >
             <Outlet />
 
-          </div>
+          </div> */}
         </Content>
-        {/* <Footer style={{ textAlign: 'center' }}>
-          Ant Design ©{new Date().getFullYear()} Created by Ant UED
-        </Footer> */}
+
       </Layout>
     </Layout>
   );

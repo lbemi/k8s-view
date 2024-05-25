@@ -1,28 +1,57 @@
-import { invoke } from "@tauri-apps/api/core";
-import { FC, useEffect,  } from "react";
+import { useAppDispatch } from "@/store/hook";
+import { setActiveCluster } from "@/store/modules/kubernetes";
+import { Table, TableColumnsType } from "antd";
+import { FC, useEffect, } from "react";
 import { useSearchParams } from "react-router-dom";
+
+
+
+interface DataType {
+  key: React.Key;
+  name: string;
+  age: number;
+  address: string;
+}
+
+const columns: TableColumnsType<DataType> = [
+  {
+    title: 'Name',
+    dataIndex: 'name',
+    width: 150,
+  },
+  {
+    title: 'Age',
+    dataIndex: 'age',
+    width: 150,
+  },
+  {
+    title: 'Address',
+    dataIndex: 'address',
+  },
+];
+
+const data: DataType[] = [];
+for (let i = 0; i < 100; i++) {
+  data.push({
+    key: i,
+    name: `Edward King ${i}`,
+    age: 32,
+    address: `London, Park Lane no. ${i}`,
+  });
+}
 
 const Dashboard: FC = () => {
   const [params] = useSearchParams();
- const cluster = params.get("cluster")
- 
-  console.log("cluster: ",cluster);
-  const list_pods=async (clusterName:string,namespace:string)=>{
-    console.log("list_pods params: ",clusterName,namespace);
-    
-    await invoke("list_pods",{clusterName:clusterName,namespace:namespace}).then((res) => {
-        console.log("res: ",res);
-    }).catch((err) => {
-        console.log("err: ",err);
-    })
-  }
+  const cluster = params.get("cluster")
+  const dispatch = useAppDispatch();
 
-  useEffect(()=> {
+  useEffect(() => {
     if (!cluster) return
-    list_pods(cluster,"default")
+    dispatch(setActiveCluster(cluster))
   }, [cluster])
- 
-  return <div>Dashboard </div>;
+
+  return <div>
+    <Table columns={columns} dataSource={data} pagination={{ pageSize: 50 }} scroll={{ y: 240 }} /> </div>;
 };
 
 export default Dashboard;

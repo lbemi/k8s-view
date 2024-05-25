@@ -5,6 +5,8 @@ import { RouterProvider } from "react-router-dom";
 import { router } from "./router";
 import "normalize.css";
 import { ConfigProvider, theme } from "antd";
+import { Provider } from "react-redux";
+import store from "./store";
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
   <React.StrictMode>
     <ConfigProvider
@@ -18,7 +20,9 @@ ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
       }}
     >
       {/* <App /> */}
+      <Provider store={store}>
       <RouterProvider router={router} />
+      </Provider>
     </ConfigProvider>
   </React.StrictMode>
 );

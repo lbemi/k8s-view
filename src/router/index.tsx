@@ -30,7 +30,6 @@ export const router = createBrowserRouter([
         //     <Outlet />
         //   </Suspense>
         // ),
-        // element: <GeekLayout />,
         children: [
           {
             path: "deployment",
