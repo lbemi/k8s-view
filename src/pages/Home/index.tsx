@@ -32,7 +32,7 @@ export const Home: FC = () => {
     const [clusters, setClusters] = useState<Array<Cluster>>([])
 
     const list_cluster = async () => {
-        await invoke("get_clusters").then((res) => {
+        await invoke("list_clusters").then((res) => {
             setClusters(res as Array<Cluster>)
         })
     }

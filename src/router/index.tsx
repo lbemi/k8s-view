@@ -25,11 +25,12 @@ export const router = createBrowserRouter([
       },
       {
         path: "workload",
-        element: (
-          <Suspense fallback={<div>Loading...</div>}>
-            <Outlet />
-          </Suspense>
-        ),
+        // element: (
+        //   <Suspense fallback={<div>Loading...</div>}>
+        //     <Outlet />
+        //   </Suspense>
+        // ),
+        // element: <GeekLayout />,
         children: [
           {
             path: "deployment",

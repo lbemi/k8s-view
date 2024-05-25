@@ -1,21 +1,67 @@
-import React from 'react';
-import { UploadOutlined, UserOutlined, VideoCameraOutlined } from '@ant-design/icons';
-import { Layout, Menu, theme } from 'antd';
+import React, { useEffect, useState } from 'react';
+import { VideoCameraOutlined } from '@ant-design/icons';
+import { Layout, Menu, MenuProps, theme } from 'antd';
+import { Outlet, useLocation, useNavigate, } from 'react-router-dom';
 
-const { Header, Content,  Sider } = Layout;
+const { Header, Content, Sider } = Layout;
+type MenuItem = Required<MenuProps>['items'][number];
+const items: MenuItem[] = [
+  {
+    label: 'Dashboard',
+    key: '/kubernetes',
+    icon: <VideoCameraOutlined />,
+  },
+  {
+    key: '/kubernetes/workload',
+    label: 'workload',
+    icon: <VideoCameraOutlined />,
+    children: [
+      {
+        key: '/kubernetes/workload/deployment',
+        label: 'Deployment',
+        icon: <VideoCameraOutlined />,
+      },
+      {
+        key: '/kubernetes/workload/pod',
+        label: 'Pod',
+        icon: <VideoCameraOutlined />,
+      }
+    ]
+  }
+]
 
-const items = [UserOutlined, VideoCameraOutlined, UploadOutlined, UserOutlined].map(
-  (icon, index) => ({
-    key: String(index + 1),
-    icon: React.createElement(icon),
-    label: `nav ${index + 1}`,
-  }),
-);
-
- const GeekLayout: React.FC = () => {
+const GeekLayout: React.FC = () => {
+  const location = useLocation();
+  const navigate = useNavigate();
   const {
     token: { colorBgContainer, borderRadiusLG },
   } = theme.useToken();
+
+  const [locationPath, setLocationPath] = useState<string>(location.pathname)
+  const [selectKeys, setSelectKeys] = useState<string[]>()
+  const [openKeys, setOpenKeys] = useState<string[]>([])
+  const handleOnSelect = (key: string, keyPath: string[]) => {
+    setSelectKeys(keyPath)
+    handleMenuOpenChange(keyPath)
+    navigate(key)
+    setOpenKeys(keyPath)
+  }
+  const handleMenuOpenChange = (keys: string[]) => {
+    let openKeyList: string[] = keys
+    if (openKeyList.length === 0) {
+      openKeyList = locationPath.split('/').slice(1)
+      openKeyList.pop()
+      openKeyList = ['/' + openKeyList.join('/')]
+    }
+    setOpenKeys(openKeyList)
+  }
+  useEffect(() => {
+    setSelectKeys([location.pathname])
+    const openKey = location.pathname.split('/').slice(1)
+    openKey.pop()
+    setOpenKeys(['/' + openKey.join('/')])
+    setLocationPath(location.pathname)
+  }, [location.pathname])
 
   return (
     <Layout>
@@ -30,7 +76,15 @@ const items = [UserOutlined, VideoCameraOutlined, UploadOutlined, UserOutlined].
         }}
       >
         <div className="demo-logo-vertical" />
-        <Menu theme="dark" mode="inline" defaultSelectedKeys={['4']} items={items} />
+        <Menu theme="dark"
+          mode="inline"
+          openKeys={openKeys}
+          onSelect={({ keyPath, key }) => handleOnSelect(key, keyPath)}
+          selectedKeys={selectKeys}
+          onOpenChange={handleMenuOpenChange}
+          forceSubMenuRender
+          items={items} />
+
       </Sider>
       <Layout>
         <Header style={{ padding: 0, background: colorBgContainer }} />
@@ -44,7 +98,8 @@ const items = [UserOutlined, VideoCameraOutlined, UploadOutlined, UserOutlined].
               borderRadius: borderRadiusLG,
             }}
           >
-            content
+            <Outlet />
+
           </div>
         </Content>
         {/* <Footer style={{ textAlign: 'center' }}>

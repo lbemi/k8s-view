@@ -5,24 +5,24 @@ use crate::service::pod::PodStruct;
 
 
 #[tauri::command]
-pub async fn list_pods(namespace: &str) -> Result<Vec<Pod>, MyError> {
-    println!("namespace: {}", namespace);
-    PodStruct::namespace(namespace).await.list_pods().await
+pub async fn list_pods(cluster_name: &str,namespace: &str) -> Result<Vec<Pod>, MyError> {
+    println!("namespace: {}, cluster_name: {cluster_name}", namespace);
+    PodStruct::new(cluster_name,namespace).await.list_pods().await
 }
 
 #[tauri::command]
-pub async fn get_pod_by_name(name: String, namespace: &str) -> Result<Pod, MyError> {
-    PodStruct::namespace(namespace).await.get_pod_by_name(name).await
+pub async fn get_pod_by_name(cluster_name: &str,name: String, namespace: &str) -> Result<Pod, MyError> {
+    PodStruct::new(cluster_name,namespace).await.get_pod_by_name(name).await
 }
 
 #[tauri::command]
-pub async fn delete_pod_by_name(name: String, namespace: &str) -> Result<String, MyError> {
-    PodStruct::namespace(namespace).await.delete_pod_by_name(name).await
+pub async fn delete_pod_by_name(cluster_name: &str,name: String, namespace: &str) -> Result<String, MyError> {
+    PodStruct::new(cluster_name,namespace).await.delete_pod_by_name(name).await
 }
 
 #[tauri::command]
-pub async fn create_pod(pod: Pod, namespace: &str) -> Result<Pod, MyError> {
-    PodStruct::namespace(namespace).await.create_pod(pod).await
+pub async fn create_pod(cluster_name: &str,pod: Pod, namespace: &str) -> Result<Pod, MyError> {
+    PodStruct::new(cluster_name,namespace).await.create_pod(pod).await
 }
 
 

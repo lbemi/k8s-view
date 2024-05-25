@@ -6,6 +6,7 @@ mod error;
 mod router;
 mod service;
 mod store;
+mod utils;
 
 use boot::server;
 fn main() {
