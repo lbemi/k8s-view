@@ -1,4 +1,4 @@
-import { Outlet, createBrowserRouter } from "react-router-dom";
+import { createBrowserRouter } from "react-router-dom";
 import GeekLayout from "../pages/Layout";
 import { Home } from "../pages/Home";
 import { Suspense, lazy } from "react";
@@ -25,11 +25,7 @@ export const router = createBrowserRouter([
       },
       {
         path: "workload",
-        element: (
-          <Suspense fallback={<div>Loading...</div>}>
-            <Outlet />
-          </Suspense>
-        ),
+
         children: [
           {
             path: "deployment",
