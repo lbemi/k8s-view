@@ -109,7 +109,7 @@ const PodPage: FC = () => {
         <Button icon={<PicRightOutlined />} type="dashed">自定义列</Button>
       </Popover>
     </div>
-    <Table style={{height: 300}} className="div-table" columns={showColumn} dataSource={pods} loading={loading} pagination={{showTotal: (total) => `共 ${total} 条`}} />
+    <Table className="table" scroll={{ y: 'calc(100vh - 320px)' }}  columns={showColumn} dataSource={pods} loading={loading} pagination={{showTotal: (total) => `共 ${total} 条`}} />
   </>;
 };
 

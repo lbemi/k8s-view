@@ -89,17 +89,17 @@ const GeekLayout: React.FC = () => {
       </Sider>
       <Layout>
         <Header style={{ padding: 0, background: colorBgContainer }} />
-        <Content style={{ margin: '24px 16px 0' }}>
-          <Card  title="Small size card" extra={<a href="#">More</a>} >
+        <Content style={{ margin: '24px 16px 0' }} className='card-container'>
+          <Card  className='card-container' >
             <Outlet />
           </Card>
           {/* <div
             style={{
-              padding: 24,
-              minHeight: 560,
-              maxHeight: 560,
+              padding: 14,
+              height: '100%',
               background: colorBgContainer,
               borderRadius: borderRadiusLG,
+              marginBottom: 24,
             }}
           >
             <Outlet />
